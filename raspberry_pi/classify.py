@@ -58,6 +58,9 @@ def run(model: str, label: str, max_results: int, num_threads: int,
   cap = cv2.VideoCapture(camera_id)
   cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
   cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+  
+  # Construct window
+  cv2.namedWindow('video_classification', flags=cv2.WINDOW_AUTOSIZE)
 
   # Continuously capture images from the camera and run inference
   while cap.isOpened():
@@ -69,7 +72,8 @@ def run(model: str, label: str, max_results: int, num_threads: int,
     counter += 1
 
     # Mirror the image
-    image = cv2.flip(image, 1)
+    image = cv2.flip(cv2.flip(image, 1), 0)
+    # image = cv2.resize(image, (172,172))
 
     # Ensure that frames are feed to the model at {_MODEL_FPS} frames per second
     # as required in the model specs.
@@ -121,7 +125,14 @@ def run(model: str, label: str, max_results: int, num_threads: int,
     # Stop the program if the ESC key is pressed.
     if cv2.waitKey(1) == 27:
       break
-    cv2.imshow('video_classification', image)
+    # cv2.imshow('video_classification', image)
+    if (counter % 10) == 0:
+        print('fps: ', fps_text)
+        for idx, category in enumerate(categories):
+            class_name = category.label
+            probability = round(category.score, 2)
+            result_text = class_name + ' (' + str(probability) + ')'
+            print('category: ', result_text)
 
   cap.release()
   cv2.destroyAllWindows()
@@ -156,12 +167,12 @@ def main():
       '--frameWidth',
       help='Width of frame to capture from camera.',
       required=False,
-      default=640)
+      default=320)
   parser.add_argument(
       '--frameHeight',
       help='Height of frame to capture from camera.',
       required=False,
-      default=480)
+      default=320)
   args = parser.parse_args()
 
   run(args.model, args.label, int(args.maxResults), int(args.numThreads),
