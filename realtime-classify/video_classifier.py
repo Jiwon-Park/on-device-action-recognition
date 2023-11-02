@@ -1,20 +1,15 @@
-# 이 소스 코드의 일부 또는 전부는 https://github.com/tensorflow/examples/tree/master/lite/examples/video_classification/raspberry_pi 에서 가져왔습니다.
+# 이 소스 코드는 https://github.com/tensorflow/examples/tree/master/lite/examples/video_classification/raspberry_pi 를 기반으로 합니다
 
 from typing import List, NamedTuple
 
 import cv2
 import numpy as np
-
-# pylint: disable=g-import-not-at-top
+#tflite_runtime 있으면 로드, 없으면 기본 tf.lite로 폴백
 try:
-  # Import TFLite interpreter from tflite_runtime package if it's available.
   from tflite_runtime.interpreter import Interpreter
 except ImportError:
-  # If not, fallback to use the TFLite interpreter from the full TF package.
   import tensorflow as tf
   Interpreter = tf.lite.Interpreter
-# pylint: enable=g-import-not-at-top
-
 
 class VideoClassifierOptions(NamedTuple):
   """A config to initialize an video classifier."""

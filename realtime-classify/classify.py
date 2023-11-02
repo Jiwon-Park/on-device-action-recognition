@@ -1,4 +1,4 @@
-# 이 소스 코드의 일부 또는 전부는 https://github.com/tensorflow/examples/tree/master/lite/examples/video_classification/raspberry_pi 에서 가져왔습니다.
+# 이 소스 코드는 https://github.com/tensorflow/examples/tree/master/lite/examples/video_classification/raspberry_pi 를 기반으로 합니다
 """Main script to run video classification."""
 
 import argparse
@@ -57,7 +57,7 @@ def run(model: str, label: str, max_results: int, num_threads: int,
     counter += 1
 
     # Mirror the image
-    image = cv2.flip(image, 1)
+    #image = cv2.flip(image, 1)
 
     # Ensure that frames are feed to the model at {_MODEL_FPS} frames per second
     # as required in the model specs.
@@ -122,7 +122,7 @@ def main():
       '--model',
       help='Name of video classification model.',
       required=False,
-      default='movinet_a0_int8.tflite')
+      default='../tflite_models/model.float16.tflite')
   parser.add_argument(
       '--label',
       help='Name of video classification label.',
